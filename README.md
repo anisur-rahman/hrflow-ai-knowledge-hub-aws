@@ -33,6 +33,7 @@ An AI-enabled HR & Operations knowledge hub. HR uploads policy PDFs, AI proposes
 - [API](#api)
 - [License](#license)
 - [Step-by-step guide](docs/GETTING_STARTED.md)
+- [Deploy to AWS from the command line](docs/DEPLOY_AWS_CLI.md)
 - [Contributing](CONTRIBUTING.md)
 
 ## Screenshots
@@ -193,6 +194,7 @@ The **[step-by-step guide](docs/GETTING_STARTED.md)** covers everything else:
 - [Part A](docs/GETTING_STARTED.md#part-a--run-it-locally-15-minutes-no-aws-account): run locally, port conflicts, the sample PDF and a walkthrough of the whole flow
 - [Part B](docs/GETTING_STARTED.md#part-b--develop-and-contribute): tests, hot reload, migrations, real Bedrock locally, contributing
 - [Part C](docs/GETTING_STARTED.md#part-c--deploy-to-aws): deploy to your AWS account with GitHub Actions (billable: about $80–120/month idle plus usage)
+- [Deploy from the command line](docs/DEPLOY_AWS_CLI.md): the same deployment with AWS CLI, Docker and Terraform only, no GitHub Actions
 - [Part D](docs/GETTING_STARTED.md#part-d--tear-down-aws): tear down
 
 ## Tests

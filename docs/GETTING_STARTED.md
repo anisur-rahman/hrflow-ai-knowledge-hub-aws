@@ -4,7 +4,7 @@ This guide takes you from an empty machine to:
 
 1. **[Part A](#part-a--run-it-locally-15-minutes-no-aws-account)**: the app running on your laptop (no AWS account, no cost).
 2. **[Part B](#part-b--develop-and-contribute)**: changing code, running tests and opening a pull request.
-3. **[Part C](#part-c--deploy-to-aws)**: a full deployment to your own AWS account through GitHub Actions.
+3. **[Part C](#part-c--deploy-to-aws)**: a full deployment to your own AWS account through GitHub Actions. Or deploy [from the command line](DEPLOY_AWS_CLI.md) without GitHub Actions.
 4. **[Part D](#part-d--tear-down-aws)**: removing everything from AWS again.
 
 Commands are for macOS or Linux (on Windows, use WSL 2). Lines starting with `#` are comments.
@@ -193,6 +193,8 @@ Open a pull request on GitHub (see [CONTRIBUTING.md](../CONTRIBUTING.md) for the
 ---
 
 ## Part C — Deploy to AWS
+
+> **Prefer to deploy from your terminal without GitHub Actions?** Follow [Deploy to AWS from the command line](DEPLOY_AWS_CLI.md) instead.
 
 What gets created: VPC, API Gateway, internal load balancer, ECS Fargate (`api`, `web`), RDS PostgreSQL, S3, SQS + DLQs, SNS, two Lambda workers, Cognito, ECR and CloudWatch alarms and dashboard. See the [architecture](../README.md#architecture).
 
