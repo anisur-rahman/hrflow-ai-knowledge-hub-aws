@@ -4,6 +4,18 @@ An AI-enabled HR & Operations knowledge hub. HR uploads policy PDFs, AI proposes
 
 **Stack:** Vue 3 + TypeScript + PrimeVue · Python + FastAPI · PostgreSQL + pgvector · Amazon Bedrock (Titan Text Embeddings V2 + a Converse chat model) · S3 · SQS · Lambda · Textract · ECS Fargate · API Gateway · Cognito · RDS · CloudWatch · GitHub Actions + ECR · Terraform
 
+## Screenshots
+
+| HR dashboard | Document library |
+|---|---|
+| ![HR dashboard with review queue, stats and recent activity](docs/screenshots/03-hr-dashboard.png) | ![Documents page with upload, status filters and review actions](docs/screenshots/04-documents.png) |
+
+| Sign-in (local mode) | One-click demo key |
+|---|---|
+| ![Local sign-in page](docs/screenshots/01-sign-in.png) | ![Sign-in page with the Use demo key button](docs/screenshots/02-sign-in-demo-key.png) |
+
+AWS deployments use Cognito hosted-UI sign-in instead of the local API key.
+
 ## Architecture
 
 ```text
@@ -70,7 +82,7 @@ cp .env.example .env
 docker compose up --build -d
 ```
 
-Open http://localhost:5173 and sign in with the API key from `.env` (`local-demo-key-change-me`). That key has both the `hr-admin` and `employee` groups. If ports 5173/8000 are in use: `FRONTEND_PORT=15173 BACKEND_PORT=18000 docker compose up -d`.
+Open http://localhost:5173 and click **Use demo key** (or enter the API key from `.env`, `local-demo-key-change-me`). That key has both the `hr-admin` and `employee` groups. If ports 5173/8000 are in use: `FRONTEND_PORT=15173 BACKEND_PORT=18000 docker compose up -d`.
 
 Create the sample PDF and try the full flow:
 
