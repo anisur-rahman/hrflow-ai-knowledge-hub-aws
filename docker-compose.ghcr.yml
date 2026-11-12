@@ -1,0 +1,12 @@
+# Run the published images from GitHub Container Registry instead of building them:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.ghcr.yml up -d
+#
+# HRFLOW_VERSION selects a release (default: latest), e.g. HRFLOW_VERSION=1.0.0
+services:
+  backend:
+    image: ghcr.io/anisur-rahman/hrflow-ai-knowledge-hub-aws/api:${HRFLOW_VERSION:-latest}
+    pull_policy: always
+  frontend:
+    image: ghcr.io/anisur-rahman/hrflow-ai-knowledge-hub-aws/web:${HRFLOW_VERSION:-latest}
+    pull_policy: always
