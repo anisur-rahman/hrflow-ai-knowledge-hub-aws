@@ -21,6 +21,11 @@ const key = ref('')
         <label for="api-key">Local demo API key</label>
         <Password v-model="key" input-id="api-key" :feedback="false" toggle-mask fluid placeholder="API_KEY from .env" />
         <Button type="submit" label="Continue" :disabled="!key" />
+        <template v-if="config.demo_api_key">
+          <div class="divider"><span>or</span></div>
+          <Button type="button" label="Use demo key" icon="pi pi-key" severity="secondary" outlined
+                  @click="useApiKey(config.demo_api_key)" />
+        </template>
         <small class="muted">Local development only. AWS deployments use Amazon Cognito sign-in.</small>
       </form>
     </div>

@@ -11,6 +11,7 @@ export interface AppConfig {
   groups: string[]
   default_groups: string[]
   categories: string[]
+  demo_api_key: string | null // only for local demos using the default key
 }
 
 export interface Me { username: string; groups: string[]; is_admin: boolean }

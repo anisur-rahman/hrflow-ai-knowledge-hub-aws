@@ -7,7 +7,7 @@ import pytest
 from conftest import approve, ask, upload
 from cryptography.hazmat.primitives.asymmetric import rsa
 
-from app.config import Settings, settings
+from app.config import DEFAULT_API_KEY, Settings, settings
 from app.security import auth
 
 
@@ -64,6 +64,14 @@ def test_non_local_environment_requires_cognito():
 def test_textract_requires_notification_channel():
     with pytest.raises(ValueError, match='TEXTRACT_SNS_TOPIC_ARN'):
         Settings(storage_provider='s3', document_bucket='b', ocr_provider='textract', _env_file=None)
+
+
+def test_demo_key_is_only_offered_for_the_default_local_key(client, monkeypatch):
+    assert client.get('/api/config').json()['demo_api_key'] is None  # tests use a custom key
+    monkeypatch.setattr(settings, 'api_key', DEFAULT_API_KEY)
+    assert client.get('/api/config').json()['demo_api_key'] == DEFAULT_API_KEY
+    monkeypatch.setattr(settings, 'environment', 'dev')
+    assert client.get('/api/config').json()['demo_api_key'] is None
 
 
 def test_docs_disabled_outside_local(client):

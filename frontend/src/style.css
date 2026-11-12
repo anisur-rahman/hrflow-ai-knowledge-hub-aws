@@ -75,6 +75,8 @@ main { flex: 1; min-width: 0; max-width: 1200px; padding: 40px 48px; margin: 0 a
 .login-card { background: #fff; border-radius: 16px; padding: 36px; width: min(440px, 100%); }
 .login-card h1 { font-size: 24px; }
 .full { width: 100%; }
+.divider { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
 
 @media (max-width: 760px) {
   .shell { flex-direction: column; }

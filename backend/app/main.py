@@ -85,7 +85,16 @@ def public_config():
             'storage_provider': settings.storage_provider, 'max_upload_bytes': settings.max_upload_bytes,
             'admin_group': settings.admin_group, 'groups': split_csv(settings.known_groups),
             'default_groups': split_csv(settings.default_document_groups),
-            'categories': [*CATEGORIES, UNCATEGORIZED]}
+            'categories': [*CATEGORIES, UNCATEGORIZED],
+            'demo_api_key': demo_api_key()}
+
+
+def demo_api_key() -> str | None:
+    """The well-known default key, offered on the sign-in page for local demos only. Never returned
+    for a custom key or outside ENVIRONMENT=local (where Cognito is required anyway)."""
+    if settings.environment == 'local' and settings.auth_mode == 'apikey' and settings.api_key == DEFAULT_API_KEY:
+        return DEFAULT_API_KEY
+    return None
 
 
 @app.get('/api/me', tags=['system'])
