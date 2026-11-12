@@ -1,0 +1,88 @@
+name: Deploy to AWS
+# Runs after CI passes on main, or manually. Requires (see README "Deploy to AWS"):
+#   repository variables AWS_DEPLOY_ROLE_ARN, AWS_REGION, TF_STATE_BUCKET, BEDROCK_CHAT_MODEL_ID
+#   optional variables ENVIRONMENT (default dev), ALARM_EMAIL
+#   a GitHub environment named "production" (add required reviewers for a manual approval gate)
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # GitHub OIDC -> AWS STS, no stored AWS keys
+
+concurrency:
+  group: deploy-${{ vars.ENVIRONMENT || 'dev' }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: vars.AWS_DEPLOY_ROLE_ARN != '' && (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      ENVIRONMENT: ${{ vars.ENVIRONMENT || 'dev' }}
+      IMAGE_TAG: ${{ github.event.workflow_run.head_sha || github.sha }}
+      TF_IN_AUTOMATION: 'true'
+      TF_VAR_environment: ${{ vars.ENVIRONMENT || 'dev' }}
+      TF_VAR_aws_region: ${{ vars.AWS_REGION }}
+      TF_VAR_bedrock_chat_model_id: ${{ vars.BEDROCK_CHAT_MODEL_ID }}
+      TF_VAR_alarm_email: ${{ vars.ALARM_EMAIL }}
+    defaults:
+      run:
+        working-directory: infrastructure/terraform
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.IMAGE_TAG }}
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+          terraform_wrapper: false
+      - name: Terraform init
+        run: >
+          terraform init -input=false
+          -backend-config="bucket=${{ vars.TF_STATE_BUCKET }}"
+          -backend-config="key=hrflow/${ENVIRONMENT}.tfstate"
+          -backend-config="region=${AWS_REGION}"
+          -backend-config="use_lockfile=true"
+      - name: Ensure ECR repositories exist (first deploy)
+        run: terraform apply -input=false -auto-approve -var image_tag="$IMAGE_TAG" -target='aws_ecr_repository.this'
+      - uses: aws-actions/amazon-ecr-login@v2
+        id: ecr
+      - name: Build and push images
+        working-directory: .
+        run: |
+          set -euo pipefail
+          REG="${{ steps.ecr.outputs.registry }}"; PREFIX="hrflow-${ENVIRONMENT}"
+          build_push() {  # tags are immutable: skip images that already exist for this commit
+            if aws ecr describe-images --repository-name "$PREFIX-$1" --image-ids imageTag="$IMAGE_TAG" >/dev/null 2>&1; then
+              echo "$1:$IMAGE_TAG already pushed"; return
+            fi
+            docker build --platform linux/amd64 --provenance=false -t "$REG/$PREFIX-$1:$IMAGE_TAG" "${@:2}"
+            docker push "$REG/$PREFIX-$1:$IMAGE_TAG"
+          }
+          build_push api -f backend/Dockerfile --target runtime .
+          build_push worker -f workers/Dockerfile .   # both Lambda workers
+          build_push web frontend
+      - name: Terraform plan
+        run: terraform plan -input=false -var image_tag="$IMAGE_TAG" -out=tfplan
+      - name: Terraform apply
+        run: terraform apply -input=false tfplan
+      - name: Wait for ECS services to stabilize
+        run: aws ecs wait services-stable --cluster "hrflow-${ENVIRONMENT}" --services api web
+      - name: Smoke test
+        run: |
+          URL=$(terraform output -raw app_url)
+          curl -fsS "$URL/health"
+          curl -fsS "$URL/api/config" >/dev/null
+          test "$(curl -s -o /dev/null -w '%{http_code}' "$URL/api/documents")" = "401"
+          echo "Deployed $IMAGE_TAG to $URL"

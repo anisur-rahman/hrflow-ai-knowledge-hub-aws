@@ -1,0 +1,15 @@
+[tool.pytest.ini_options]
+pythonpath = ["backend", "."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 125
+target-version = "py312"
+src = ["backend", "."]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["B008"]  # FastAPI's Depends()/File() defaults
+
+[tool.ruff.lint.isort]
+known-first-party = ["app", "workers"]

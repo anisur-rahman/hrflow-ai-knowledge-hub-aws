@@ -1,0 +1,5 @@
+environment           = "dev"
+aws_region            = "us-east-1"
+image_tag             = "replace-with-git-sha"
+bedrock_chat_model_id = "replace-with-a-converse-model-or-inference-profile-id"
+alarm_email           = ""

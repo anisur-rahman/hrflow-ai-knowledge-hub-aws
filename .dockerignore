@@ -1,0 +1,10 @@
+# Build context for backend/Dockerfile and workers/Dockerfile is the repository root.
+.git
+.env
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/.ruff_cache
+frontend
+infrastructure
+samples

@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+dist/
+.pytest_cache/
+.DS_Store
+*.tfstate*
+.terraform/
+.ruff_cache/
+tfplan
+terraform.tfvars
+samples/*.pdf
