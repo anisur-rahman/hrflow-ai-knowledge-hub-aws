@@ -1,5 +1,7 @@
 # HRFlow AI Knowledge Hub
 
+[![CI](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/actions/workflows/ci.yml)
+
 An AI-enabled HR & Operations knowledge hub. HR uploads policy PDFs, AI proposes a category and summary, HR reviews and publishes, and employees ask questions in plain language and get answers grounded in the published policies, with page citations that open the source PDF.
 
 **Stack:** Vue 3 + TypeScript + PrimeVue · Python + FastAPI · PostgreSQL + pgvector · Amazon Bedrock (Titan Text Embeddings V2 + a Converse chat model) · S3 · SQS · Lambda · Textract · ECS Fargate · API Gateway · Cognito · RDS · CloudWatch · GitHub Actions + ECR · Terraform
