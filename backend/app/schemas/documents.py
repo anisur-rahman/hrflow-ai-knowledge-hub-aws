@@ -3,9 +3,12 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
 
+from app.services.classification import CATEGORIES, UNCATEGORIZED
+
 GroupName = Annotated[str, StringConstraints(pattern=r'^[A-Za-z0-9_.-]{1,64}$')]
 DocId = Annotated[str, StringConstraints(pattern=r'^[0-9a-f-]{36}$')]
-Category = Literal['Human Resources', 'Finance/Operations', 'Legal/Compliance', 'IT', 'Uncategorized']
+# Built from the classifier's list so the review API always accepts what the AI can propose.
+Category = Literal[(*CATEGORIES, UNCATEGORIZED)]
 
 
 class DocumentOut(BaseModel):

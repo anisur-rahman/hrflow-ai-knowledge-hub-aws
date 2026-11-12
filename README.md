@@ -150,64 +150,30 @@ hrflow-ai-knowledge-hub-aws/
 └── README.md
 ```
 
-## Run locally (no AWS account needed)
-
-Short version below; the [step-by-step guide](docs/GETTING_STARTED.md#part-a--run-it-locally-15-minutes-no-aws-account) has every detail.
-
-Requires Docker Desktop.
+## Quick start (local, no AWS account)
 
 ```bash
 cp .env.example .env
 docker compose up --build -d
 ```
 
-Open http://localhost:5173 and click **Use demo key** (or enter the API key from `.env`, `local-demo-key-change-me`). That key has both the `hr-admin` and `employee` groups. If ports 5173/8000 are in use: `FRONTEND_PORT=15173 BACKEND_PORT=18000 docker compose up -d`.
+Open http://localhost:5173 and click **Use demo key**. Local mode is offline (`AI_PROVIDER=mock`): embeddings are token hashes and answers are the best matching excerpt, so it shows the plumbing, not AI quality.
 
-Create the sample PDF and try the full flow:
+The **[step-by-step guide](docs/GETTING_STARTED.md)** covers everything else:
 
-```bash
-docker compose run --rm --no-deps -v "$PWD/samples:/samples" backend python /samples/make_sample_pdf.py
-```
+- [Part A](docs/GETTING_STARTED.md#part-a--run-it-locally-15-minutes-no-aws-account): run locally, port conflicts, the sample PDF and a walkthrough of the whole flow
+- [Part B](docs/GETTING_STARTED.md#part-b--develop-and-contribute): tests, hot reload, migrations, real Bedrock locally, contributing
+- [Part C](docs/GETTING_STARTED.md#part-c--deploy-to-aws): deploy to your AWS account with GitHub Actions (billable: about $80–120/month idle plus usage)
+- [Part D](docs/GETTING_STARTED.md#part-d--tear-down-aws): tear down
 
-1. **Document dashboard** → upload `samples/remote_work_expense_policy.pdf`. Its status moves to *Needs review*.
-2. **Review** → check or edit the AI category and summary, choose who can see it → *Approve & publish*.
-3. **Policy assistant** → ask *"Can I buy an ergonomic desk chair, and how much can I claim?"* Click the citation to open the PDF at the cited page.
+## Tests
 
-> **Mock mode** (`AI_PROVIDER=mock`) is deterministic and offline: embeddings are token hashes and answers are the top retrieved excerpt. It shows the plumbing, not AI quality.
-
-To use real Bedrock locally, set `AI_PROVIDER=bedrock` and `BEDROCK_CHAT_MODEL_ID` in `.env`, and make AWS credentials available to the backend container (for example a read-only mounted profile). Changing the embedding model requires reprocessing documents. `docker compose down -v` deletes all local data.
-
-### Tests
-
-```bash
-docker compose --profile test run --rm tests        # pytest in the container against the compose Postgres
-# or on the host (Python 3.12), from the repository root:
-python3.12 -m venv .venv && .venv/bin/pip install -r backend/requirements-dev.txt
-TEST_DATABASE_URL=postgresql+psycopg://hrflow:hrflow_dev@localhost:5432/hrflow_test .venv/bin/python -m pytest -q
-```
+`docker compose --profile test run --rm tests` runs everything against a real PostgreSQL + pgvector (CI runs the same suite on every push).
 
 - `test_documents.py`: upload → processing → review edits → publish, validation, failures and reprocess, deletion, dashboard stats and audit trail.
 - `test_rag.py`: only published evidence is used, citations (title, version, page, section, PDF link), follow-up questions, the model is never called without evidence, prompt construction, AI output parsing.
 - `test_security.py`: API key and Cognito token checks (wrong client, ID token, expired, wrong issuer, forged signature), admin-only endpoints, group-based visibility in lists, downloads and retrieval, configuration guards.
 - `test_ingestion.py`: chunking and headings, both Lambda handlers, and the async Textract flow (start, duplicate events, completion, failed job, transient error retried).
-
-## Deploy to AWS
-
-Summary below; follow the [step-by-step deployment guide](docs/GETTING_STARTED.md#part-c--deploy-to-aws) for the exact commands, GitHub settings, user creation and teardown.
-
-Everything is in `infrastructure/terraform`. **This creates billable resources** (roughly $80–120/month idle for the defaults: NAT gateway, RDS `db.t4g.micro`, internal ALB, 2 small Fargate tasks), plus Bedrock and Textract usage. Run `terraform destroy` when you are not demoing.
-
-1. **Enable Bedrock model access** in your region for Titan Text Embeddings V2 and a Converse-compatible chat model. Note the model or inference-profile ID.
-2. **Bootstrap once** (state bucket + GitHub OIDC deploy role), as an AWS administrator:
-   ```bash
-   cd infrastructure/terraform/bootstrap
-   terraform init && terraform apply -var github_repository=YOUR_USER/hrflow-ai-knowledge-hub-aws
-   ```
-3. **In GitHub**, create an environment named `production` (add yourself as a required reviewer for a manual approval gate). Then add these repository variables: `AWS_DEPLOY_ROLE_ARN`, `TF_STATE_BUCKET` (both are bootstrap outputs), `AWS_REGION` and `BEDROCK_CHAT_MODEL_ID`. `ENVIRONMENT` and `ALARM_EMAIL` are optional.
-4. **Push to `main`.** After CI passes, *Deploy to AWS* builds and pushes the images, applies Terraform, waits for ECS, and smoke-tests `/health` and the 401 on `/api/documents`.
-5. **Create users** with the `create_admin_user` command from `terraform output`, then open `terraform output app_url`.
-
-Manual deploy from a laptop: `terraform init -backend-config=...` (same values as the workflow), push images tagged with a commit SHA to the three ECR repositories, then `terraform apply -var image_tag=<sha>` using `terraform.tfvars.example` as a template.
 
 ## Production readiness: what is and isn't done
 

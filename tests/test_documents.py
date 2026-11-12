@@ -87,3 +87,14 @@ def test_dashboard_stats(client):
     assert stats['documents_by_status'] == {'published': 1, 'pending_review': 1}
     assert stats['searchable_chunks'] >= 3
     assert stats['questions_7d'] == 2 and stats['unanswered_7d'] == 1
+
+
+def test_review_accepts_exactly_the_classifier_categories(client):
+    from app.services.classification import CATEGORIES, UNCATEGORIZED
+
+    doc = upload(client)
+    for category in (*CATEGORIES, UNCATEGORIZED):
+        assert approve(client, doc['id'], category=category)['category'] == category
+    bogus = client.patch(f'/api/documents/{doc["id"]}/review', headers=ADMIN,
+                         json={'action': 'approve', 'category': 'Benefits'})
+    assert bogus.status_code == 422

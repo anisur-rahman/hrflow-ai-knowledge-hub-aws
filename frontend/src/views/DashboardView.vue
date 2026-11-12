@@ -4,7 +4,7 @@ import Button from 'primevue/button'
 import { RouterLink } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 import DocumentList from '../components/DocumentList.vue'
-import { errorMessage, getAuditEvents, getStats, type AuditEvent, type Stats } from '../services/api'
+import { IN_FLIGHT, errorMessage, getAuditEvents, getStats, type AuditEvent, type Stats } from '../services/api'
 import { useDocuments } from '../services/documents'
 
 const toast = useToast()
@@ -23,7 +23,7 @@ const count = (...statuses: string[]) =>
 const cards = computed(() => [
   { label: 'Needs review', value: count('pending_review'), icon: 'pi-eye' },
   { label: 'Published', value: count('published'), icon: 'pi-check-circle' },
-  { label: 'Processing', value: count('awaiting_upload', 'queued', 'processing', 'ocr_pending'), icon: 'pi-spinner' },
+  { label: 'Processing', value: count(...IN_FLIGHT), icon: 'pi-spinner' },
   { label: 'Failed', value: count('failed'), icon: 'pi-exclamation-triangle' },
   { label: 'Questions (7 days)', value: stats.value?.questions_7d ?? 0, icon: 'pi-comments' },
   { label: 'Unanswered (7 days)', value: stats.value?.unanswered_7d ?? 0, icon: 'pi-question-circle',
