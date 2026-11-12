@@ -22,6 +22,18 @@ An AI-enabled HR & Operations knowledge hub. HR uploads policy PDFs, AI proposes
 
 > **New here?** Follow the **[step-by-step guide](docs/GETTING_STARTED.md)**: run locally in 15 minutes with no AWS account, develop and test, deploy to your own AWS account with GitHub Actions, and tear it down.
 
+## Contents
+
+- [Screenshots](#screenshots)
+- [Architecture](#architecture)
+- [Project structure](#project-structure)
+- [Quick start (local, no AWS account)](#quick-start-local-no-aws-account)
+- [Tests](#tests)
+- [Production readiness: what is and isn't done](#production-readiness-what-is-and-isnt-done)
+- [API](#api)
+- [License](#license)
+- [Step-by-step guide](docs/GETTING_STARTED.md)
+
 ## Screenshots
 
 | HR dashboard | Document library |
