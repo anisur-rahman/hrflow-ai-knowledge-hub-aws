@@ -1,6 +1,7 @@
 # HRFlow AI Knowledge Hub
 
 [![CI](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/anisur-rahman/hrflow-ai-knowledge-hub-aws)](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/releases/latest)
 [![License: MIT](https://img.shields.io/github/license/anisur-rahman/hrflow-ai-knowledge-hub-aws)](LICENSE)
 [![Last commit](https://img.shields.io/github/last-commit/anisur-rahman/hrflow-ai-knowledge-hub-aws)](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/commits/main)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
