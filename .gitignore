@@ -14,3 +14,4 @@ dist/
 tfplan
 terraform.tfvars
 samples/*.pdf
+docker-compose.override.yml

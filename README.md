@@ -4,6 +4,8 @@ An AI-enabled HR & Operations knowledge hub. HR uploads policy PDFs, AI proposes
 
 **Stack:** Vue 3 + TypeScript + PrimeVue · Python + FastAPI · PostgreSQL + pgvector · Amazon Bedrock (Titan Text Embeddings V2 + a Converse chat model) · S3 · SQS · Lambda · Textract · ECS Fargate · API Gateway · Cognito · RDS · CloudWatch · GitHub Actions + ECR · Terraform
 
+> **New here?** Follow the **[step-by-step guide](docs/GETTING_STARTED.md)**: run locally in 15 minutes with no AWS account, develop and test, deploy to your own AWS account with GitHub Actions, and tear it down.
+
 ## Screenshots
 
 | HR dashboard | Document library |
@@ -150,6 +152,8 @@ hrflow-ai-knowledge-hub-aws/
 
 ## Run locally (no AWS account needed)
 
+Short version below; the [step-by-step guide](docs/GETTING_STARTED.md#part-a--run-it-locally-15-minutes-no-aws-account) has every detail.
+
 Requires Docker Desktop.
 
 ```bash
@@ -188,6 +192,8 @@ TEST_DATABASE_URL=postgresql+psycopg://hrflow:hrflow_dev@localhost:5432/hrflow_t
 - `test_ingestion.py`: chunking and headings, both Lambda handlers, and the async Textract flow (start, duplicate events, completion, failed job, transient error retried).
 
 ## Deploy to AWS
+
+Summary below; follow the [step-by-step deployment guide](docs/GETTING_STARTED.md#part-c--deploy-to-aws) for the exact commands, GitHub settings, user creation and teardown.
 
 Everything is in `infrastructure/terraform`. **This creates billable resources** (roughly $80–120/month idle for the defaults: NAT gateway, RDS `db.t4g.micro`, internal ALB, 2 small Fargate tasks), plus Bedrock and Textract usage. Run `terraform destroy` when you are not demoing.
 
