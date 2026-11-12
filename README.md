@@ -2,6 +2,19 @@
 
 [![CI](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/github/license/anisur-rahman/hrflow-ai-knowledge-hub-aws)](LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/anisur-rahman/hrflow-ai-knowledge-hub-aws)](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/commits/main)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Vue 3](https://img.shields.io/badge/Vue-3-4FC08D?logo=vuedotjs&logoColor=white)](https://vuejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![PrimeVue 4](https://img.shields.io/badge/PrimeVue-4-41B883?logo=primevue&logoColor=white)](https://primevue.org/)
+[![PostgreSQL + pgvector](https://img.shields.io/badge/PostgreSQL-pgvector-4169E1?logo=postgresql&logoColor=white)](https://github.com/pgvector/pgvector)
+[![Amazon Bedrock](https://img.shields.io/badge/Amazon_Bedrock-RAG-FF9900)](https://aws.amazon.com/bedrock/)
+[![AWS](https://img.shields.io/badge/AWS-Lambda_%7C_ECS_Fargate_%7C_Textract-FF9900)](https://aws.amazon.com/)
+[![Terraform](https://img.shields.io/badge/Terraform-844FBA?logo=terraform&logoColor=white)](infrastructure/terraform)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](docker-compose.yml)
 
 An AI-enabled HR & Operations knowledge hub. HR uploads policy PDFs, AI proposes a category and summary, HR reviews and publishes, and employees ask questions in plain language and get answers grounded in the published policies, with page citations that open the source PDF.
 
