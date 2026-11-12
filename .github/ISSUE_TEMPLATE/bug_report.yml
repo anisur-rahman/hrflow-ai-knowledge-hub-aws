@@ -1,0 +1,79 @@
+name: Bug report
+description: Something does not work as documented.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! Please check [existing issues](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/issues) first.
+        **Security problems:** do not report them here. Email the maintainer instead (see [CONTRIBUTING.md](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/blob/main/CONTRIBUTING.md)).
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Upload / document processing
+        - Review & publishing
+        - Policy assistant (chat, citations)
+        - Sign-in / permissions
+        - Frontend UI
+        - AWS deployment / Terraform
+        - CI / GitHub Actions
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Where does it happen?
+      options:
+        - Local (Docker Compose, mock AI)
+        - Local with Bedrock
+        - AWS deployment
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Upload samples/remote_work_expense_policy.pdf
+        2. Click Review, then Approve & publish
+        3. Ask "..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: Include any error message shown in the UI.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: "Locally: `docker compose logs backend`. Every line has a `request_id`; the UI error response includes it too. Remove any secrets or personal data."
+      render: shell
+  - type: input
+    id: version
+    attributes:
+      label: Commit or version
+      placeholder: "git rev-parse --short HEAD"
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I removed secrets, credentials and personal or real employee data from this report.
+          required: true

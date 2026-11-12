@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/blob/main/CONTRIBUTING.md#ways-to-contribute
+    about: Please report security problems privately by email, not in a public issue.
+  - name: Setup and deployment guide
+    url: https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/blob/main/docs/GETTING_STARTED.md
+    about: Step-by-step instructions and troubleshooting for running and deploying the project.
