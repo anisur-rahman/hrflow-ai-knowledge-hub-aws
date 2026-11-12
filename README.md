@@ -49,28 +49,103 @@ Employee question
 | Observability | JSON logs with request IDs → CloudWatch metric filters (ingestion outcomes, chat latency, questions with no evidence, Bedrock tokens) → alarms + dashboard |
 | CI/CD | CI: ruff, pytest against real pgvector, type-checked build, `npm audit`, `terraform validate`, image builds. Deploy: GitHub OIDC → ECR → `terraform apply` → wait for ECS → smoke test |
 
-## Repository layout
+## Project structure
 
 ```text
-frontend/                 Vue 3 + TypeScript + PrimeVue
-  src/views/              DashboardView (HR), DocumentsView, ChatView, LoginView
-  src/components/         DocumentUpload, DocumentList, ReviewDialog, AIChatbot
-  src/services/           api.ts, auth.ts (Cognito OIDC / local key), session.ts, documents.ts
-  src/router/             routes + HR-only guard
-backend/
-  app/main.py             FastAPI app, middleware, health and config
-  app/api/                documents.py, chat.py, admin.py (review, reprocess, delete, stats, audit)
-  app/services/           s3_service, extraction, classification, summarization, chunking,
-                          embeddings, vector_store, rag_service, ingestion, bedrock, audit
-  app/models/ schemas/ security/ config.py
-  migrations/             Alembic
-workers/
-  ingest_lambda/          S3 upload event -> extraction -> AI pipeline (or start Textract)
-  textract_callback/      Textract completion -> OCR text -> AI pipeline
-infrastructure/terraform/ main, networking, ecs, rds, s3, iam, api_gateway, cognito, lambda,
-                          monitoring, variables, outputs (+ bootstrap/ for state and CI role)
-tests/                    test_documents, test_rag, test_security, test_ingestion
-.github/workflows/        ci.yml, deploy.yml
+hrflow-ai-knowledge-hub-aws/
+│
+├── frontend/                          # Vue 3 + TypeScript + PrimeVue
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── DocumentUpload.vue     # PDF picker, version, visibility groups
+│   │   │   ├── DocumentList.vue       # status table, filters, row actions
+│   │   │   ├── ReviewDialog.vue       # approve / edit AI category & summary
+│   │   │   └── AIChatbot.vue          # conversation with clickable citations
+│   │   ├── views/
+│   │   │   ├── DashboardView.vue      # HR: review queue, stats, activity
+│   │   │   ├── DocumentsView.vue      # upload + document library
+│   │   │   ├── ChatView.vue           # employee policy assistant
+│   │   │   └── LoginView.vue          # Cognito sign-in / local demo key
+│   │   ├── services/
+│   │   │   ├── api.ts                 # typed REST client, uploads, source links
+│   │   │   ├── auth.ts                # Cognito OIDC (code + PKCE) / API key
+│   │   │   ├── session.ts             # app config + signed-in profile
+│   │   │   └── documents.ts           # document store with status polling
+│   │   ├── router/
+│   │   │   └── index.ts               # routes + HR-only guard
+│   │   ├── App.vue
+│   │   └── main.ts
+│   ├── nginx.conf                     # SPA hosting + security headers
+│   ├── package.json
+│   └── Dockerfile
+│
+├── backend/
+│   ├── app/
+│   │   ├── main.py                    # FastAPI app, middleware, health, config
+│   │   ├── api/
+│   │   │   ├── documents.py           # library, presigned upload, source links
+│   │   │   ├── chat.py                # RAG question answering
+│   │   │   └── admin.py               # review, reprocess, delete, stats, audit
+│   │   ├── services/
+│   │   │   ├── s3_service.py          # presigned POST/GET, local storage
+│   │   │   ├── extraction.py          # PyMuPDF + headings, async Textract
+│   │   │   ├── classification.py      # Bedrock document category
+│   │   │   ├── summarization.py       # Bedrock proposed summary
+│   │   │   ├── chunking.py            # page-aware overlapping chunks
+│   │   │   ├── embeddings.py          # Titan Text Embeddings V2
+│   │   │   ├── vector_store.py        # pgvector storage + authorized search
+│   │   │   ├── rag_service.py         # grounded answers with citations
+│   │   │   ├── ingestion.py           # pipeline orchestration (idempotent)
+│   │   │   ├── bedrock.py             # shared Bedrock client
+│   │   │   └── audit.py               # audit trail
+│   │   ├── models/                    # SQLAlchemy: Document, Chunk, Audit
+│   │   ├── schemas/                   # Pydantic request/response models
+│   │   ├── security/                  # Cognito JWT verification, group access
+│   │   ├── observability.py           # JSON logs -> CloudWatch metrics
+│   │   └── config.py
+│   ├── migrations/                    # Alembic (pgvector, HNSW index)
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── workers/
+│   ├── ingest_lambda/
+│   │   └── handler.py                 # S3 upload event -> ingestion
+│   ├── textract_callback/
+│   │   └── handler.py                 # Textract completion -> ingestion
+│   ├── common.py                      # SQS partial batch handling
+│   └── Dockerfile                     # one Lambda image, two handlers
+│
+├── infrastructure/
+│   └── terraform/
+│       ├── main.tf                    # providers, shared settings, ECR
+│       ├── networking.tf              # VPC, subnets, NAT, security groups
+│       ├── ecs.tf                     # internal ALB, Fargate api + web
+│       ├── rds.tf                     # PostgreSQL 17 + pgvector
+│       ├── s3.tf                      # private document bucket + events
+│       ├── lambda.tf                  # SQS, SNS, DLQs, worker Lambdas
+│       ├── iam.tf                     # least-privilege roles
+│       ├── api_gateway.tf             # HTTP API, VPC link, JWT authorizer
+│       ├── cognito.tf                 # user pool, hosted UI, groups
+│       ├── monitoring.tf              # metric filters, alarms, dashboard
+│       ├── variables.tf
+│       ├── outputs.tf
+│       └── bootstrap/                 # state bucket + GitHub OIDC role
+│
+├── tests/
+│   ├── test_documents.py              # upload, review, publish, admin
+│   ├── test_rag.py                    # grounding and citations
+│   ├── test_security.py               # auth, groups, token checks
+│   └── test_ingestion.py              # chunking, workers, async OCR
+│
+├── .github/workflows/
+│   ├── ci.yml                         # lint, tests, build, terraform validate
+│   └── deploy.yml                     # OIDC -> ECR -> terraform apply -> smoke test
+│
+├── samples/                           # demo policy + PDF generator
+├── docs/screenshots/
+├── docker-compose.yml
+├── .env.example
+└── README.md
 ```
 
 ## Run locally (no AWS account needed)
