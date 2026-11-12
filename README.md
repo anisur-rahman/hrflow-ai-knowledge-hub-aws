@@ -238,3 +238,7 @@ Known limits and next steps:
 | `POST /api/chat` | signed in | `{question, history}` → `{answer, sources[]}` |
 
 Swagger UI is at http://localhost:8000/docs locally (it is disabled outside `ENVIRONMENT=local`).
+
+## License
+
+[MIT](LICENSE) © 2026 Md Anisur Rahman
