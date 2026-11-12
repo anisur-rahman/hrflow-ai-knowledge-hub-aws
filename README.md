@@ -3,6 +3,7 @@
 [![CI](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/anisur-rahman/hrflow-ai-knowledge-hub-aws)](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/releases/latest)
 [![License: MIT](https://img.shields.io/github/license/anisur-rahman/hrflow-ai-knowledge-hub-aws)](LICENSE)
+[![Docker images on ghcr.io](https://img.shields.io/github/v/release/anisur-rahman/hrflow-ai-knowledge-hub-aws?label=ghcr.io&logo=docker&logoColor=white)](https://github.com/anisur-rahman?tab=packages&repo_name=hrflow-ai-knowledge-hub-aws)
 [![Last commit](https://img.shields.io/github/last-commit/anisur-rahman/hrflow-ai-knowledge-hub-aws)](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/commits/main)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
@@ -188,6 +189,12 @@ hrflow-ai-knowledge-hub-aws/
 ```bash
 cp .env.example .env
 docker compose up --build -d
+```
+
+**Skip the build:** run the published images from GitHub Container Registry instead (pin a release with `HRFLOW_VERSION=1.0.0`):
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.ghcr.yml up -d
 ```
 
 Open http://localhost:5173 and click **Use demo key**. Local mode is offline (`AI_PROVIDER=mock`): embeddings are token hashes and answers are the best matching excerpt, so it shows the plumbing, not AI quality.

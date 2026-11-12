@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+- Container images for every release on GitHub Container Registry: `ghcr.io/anisur-rahman/hrflow-ai-knowledge-hub-aws/{api,web,worker}` (`api` and `web` for amd64 and arm64), published by the new *Publish images* workflow.
+- `docker-compose.ghcr.yml` to run the published images locally without building.
+
 ## [1.0.0] - 2026-11-12
 
 First release.

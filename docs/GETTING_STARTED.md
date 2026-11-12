@@ -58,6 +58,13 @@ curl http://localhost:8000/health/ready     # {"status":"ready"}
 
 The first build takes a few minutes. The backend runs the database migrations automatically on start.
 
+**Don't want to build?** Use the images published for each release on GitHub Container Registry. They are multi-architecture, so they run natively on Apple Silicon too:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.ghcr.yml up -d
+HRFLOW_VERSION=1.0.0 docker compose -f docker-compose.yml -f docker-compose.ghcr.yml up -d   # a specific release
+```
+
 **Port already in use?** Another project may be using 5173 or 8000. Choose different ports:
 
 ```bash
