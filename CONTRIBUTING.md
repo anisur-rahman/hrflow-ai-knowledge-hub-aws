@@ -9,7 +9,7 @@ Thanks for your interest in improving this project! This page explains how to pr
 - **Improve the docs:** fixes to the README or the [step-by-step guide](docs/GETTING_STARTED.md) are always welcome.
 - **Send code:** follow the workflow below.
 
-**Security problems:** please do **not** open a public issue. Email the maintainer at [anisur_rahman@outlook.com](mailto:anisur_rahman@outlook.com) and allow time for a fix before anything is disclosed.
+**Security problems:** please do **not** open a public issue. Follow the [security policy](SECURITY.md) and report them by email.
 
 Everyone taking part is expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 

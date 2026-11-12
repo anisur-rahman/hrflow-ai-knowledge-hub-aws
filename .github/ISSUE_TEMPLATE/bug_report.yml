@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         Thanks for reporting! Please check [existing issues](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/issues) first.
-        **Security problems:** do not report them here. Email the maintainer instead (see [CONTRIBUTING.md](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/blob/main/CONTRIBUTING.md)).
+        **Security problems:** do not report them here. Follow the [security policy](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/blob/main/SECURITY.md) instead.
   - type: dropdown
     id: area
     attributes:
