@@ -188,7 +188,7 @@ git commit -m "Describe the change"
 git push -u origin feature/short-description
 ```
 
-Open a pull request on GitHub. **CI** runs automatically: ruff, pytest against pgvector, the frontend type check and build, `npm audit`, `terraform validate`, and Docker image builds. All checks must pass before you merge.
+Open a pull request on GitHub (see [CONTRIBUTING.md](../CONTRIBUTING.md) for the standards). **CI** runs automatically: ruff, pytest against pgvector, the frontend type check and build, `npm audit`, `terraform validate`, and Docker image builds. All checks must pass before you merge.
 
 ---
 

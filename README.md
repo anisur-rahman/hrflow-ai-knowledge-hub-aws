@@ -33,6 +33,7 @@ An AI-enabled HR & Operations knowledge hub. HR uploads policy PDFs, AI proposes
 - [API](#api)
 - [License](#license)
 - [Step-by-step guide](docs/GETTING_STARTED.md)
+- [Contributing](CONTRIBUTING.md)
 
 ## Screenshots
 
@@ -232,6 +233,10 @@ Known limits and next steps:
 | `POST /api/chat` | signed in | `{question, history}` → `{answer, sources[]}` |
 
 Swagger UI is at http://localhost:8000/docs locally (it is disabled outside `ENVIRONMENT=local`).
+
+## Contributing
+
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow, coding standards and the checks a pull request must pass.
 
 ## License
 
