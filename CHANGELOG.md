@@ -46,5 +46,5 @@ First release.
 ### Fixed
 - `terraform destroy` could not remove the versioned documents bucket once files had been uploaded.
 
-[Unreleased]: https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/commits/main
-[1.0.0]: https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/commits/main
+[Unreleased]: https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/releases/tag/v1.0.0
