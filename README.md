@@ -236,7 +236,7 @@ Swagger UI is at http://localhost:8000/docs locally (it is disabled outside `ENV
 
 ## Contributing
 
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow, coding standards and the checks a pull request must pass.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow, coding standards and the checks a pull request must pass. Please follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
