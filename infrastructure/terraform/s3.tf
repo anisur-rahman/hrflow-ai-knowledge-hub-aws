@@ -1,6 +1,8 @@
 # Private document bucket. The browser uploads with presigned POSTs; uploads trigger ingestion via SQS.
 resource "aws_s3_bucket" "documents" {
   bucket = "${local.name}-documents-${local.account_id}"
+  # Versioned bucket: without this, `terraform destroy` fails once any PDF was uploaded.
+  force_destroy = !var.deletion_protection
 }
 
 resource "aws_s3_bucket_public_access_block" "documents" {
