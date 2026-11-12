@@ -1,6 +1,7 @@
 # HRFlow AI Knowledge Hub
 
 [![CI](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/anisur-rahman/hrflow-ai-knowledge-hub-aws/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/github/license/anisur-rahman/hrflow-ai-knowledge-hub-aws)](LICENSE)
 
 An AI-enabled HR & Operations knowledge hub. HR uploads policy PDFs, AI proposes a category and summary, HR reviews and publishes, and employees ask questions in plain language and get answers grounded in the published policies, with page citations that open the source PDF.
 
