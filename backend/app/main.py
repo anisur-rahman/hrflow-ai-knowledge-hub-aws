@@ -27,7 +27,7 @@ async def lifespan(app: FastAPI):
 
 
 local = settings.environment == 'local'
-app = FastAPI(title='HRFlow AI Knowledge Hub', version='2.1.0', lifespan=lifespan,
+app = FastAPI(title='HRFlow AI Knowledge Hub', version='1.0.0', lifespan=lifespan,
               docs_url='/docs' if local else None, redoc_url=None, openapi_url='/openapi.json' if local else None)
 app.add_middleware(CORSMiddleware, allow_origins=split_csv(settings.cors_origins),
                    allow_methods=['GET', 'POST', 'PATCH', 'DELETE'],

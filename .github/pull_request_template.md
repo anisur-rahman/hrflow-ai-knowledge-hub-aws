@@ -26,6 +26,7 @@ Closes #<!-- issue number, if any -->
 - [ ] Retrieval and document access still filter by status and the caller's groups in SQL
 - [ ] No secrets, `.env`, credentials or real employee data
 - [ ] Docs updated (README / `docs/GETTING_STARTED.md`) if behaviour or setup changed
+- [ ] `CHANGELOG.md` updated under `[Unreleased]` for user-visible changes
 
 ## AWS impact
 

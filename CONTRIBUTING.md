@@ -32,8 +32,9 @@ Follow [Part A](docs/GETTING_STARTED.md#part-a--run-it-locally-15-minutes-no-aws
    (cd frontend && npm ci && npm run build)                 # type check + production build
    terraform -chdir=infrastructure/terraform fmt -check -recursive   # if you touched Terraform
    ```
-5. **Commit** with a clear message: a short summary line in the imperative mood ("Add …", "Fix …"), and a body explaining *why* if the change is not obvious.
-6. **Push and open a pull request** against `main`. Describe what changed and how you tested it, and link the issue it addresses.
+5. **Update [CHANGELOG.md](CHANGELOG.md)**: add a line under `## [Unreleased]` for any user-visible change.
+6. **Commit** with a clear message: a short summary line in the imperative mood ("Add …", "Fix …"), and a body explaining *why* if the change is not obvious.
+7. **Push and open a pull request** against `main`. Describe what changed and how you tested it, and link the issue it addresses.
 
 CI must pass (lint, tests, frontend build, `npm audit`, `terraform validate`, image builds) before a pull request can be merged. Keep pull requests focused: one change per pull request is much easier to review.
 
