@@ -165,6 +165,7 @@ Complete steps C1–C2 first (AWS CLI signed in, model access enabled). Then:
 # .env
 AI_PROVIDER=bedrock
 BEDROCK_CHAT_MODEL_ID=<model or inference profile ID from step C2>
+BEDROCK_EFFORT=                 # optional, see docs/BEDROCK_MODELS.md step 7
 ```
 
 Make your AWS credentials available to the backend container by creating `docker-compose.override.yml` (Compose loads it automatically; it is yours, so don't commit it):
@@ -235,16 +236,9 @@ tf() { docker run --rm -it -v "$PWD":/w -w /w -v ~/.aws:/root/.aws \
 # then write `tf init` instead of `terraform init`, and so on
 ```
 
-### C2. Enable the Bedrock models
+### C2. Choose, enable and test the Bedrock models
 
-1. In the AWS console, choose your region (for example **us-east-1**) and open **Amazon Bedrock → Model access**.
-2. Request access to **Titan Text Embeddings V2** and a chat model (for example an Anthropic Claude model). Approval for most models is immediate.
-3. Find the ID to use for the chat model:
-   ```bash
-   aws bedrock list-inference-profiles --region us-east-1 \
-     --query 'inferenceProfileSummaries[].inferenceProfileId' --output table
-   ```
-   Newer models must be called through an inference profile (IDs such as `us.anthropic...`); otherwise use the model ID from `aws bedrock list-foundation-models`.
+Follow **[Choosing the Amazon Bedrock models](BEDROCK_MODELS.md)**, steps 2–5: pick the chat model (start with Claude Haiku 5.5), enable model access, find the exact ID for your region, and test both models the way the app calls them. Keep the ID that passed the test for step C4.
 
 ### C3. Bootstrap once: Terraform state and the GitHub deploy role
 
@@ -278,6 +272,7 @@ gh variable set AWS_REGION            --body "us-east-1"
 gh variable set BEDROCK_CHAT_MODEL_ID --body "<chat model or inference profile ID from C2>"
 gh variable set ENVIRONMENT           --body "dev"               # optional; names resources hrflow-dev-*
 gh variable set ALARM_EMAIL           --body "you@example.com"   # optional; alarm notifications
+gh variable set BEDROCK_EFFORT        --body "low"               # optional; only after the check in BEDROCK_MODELS.md step 7
 ```
 
 These are not secrets. The workflow has no AWS keys at all; it signs in with GitHub OIDC.
@@ -363,6 +358,6 @@ Finally, delete the GitHub variables so the deploy workflow goes back to being s
 | Chat answers "I could not find relevant policy evidence…" | The document is not **published**, or it is not visible to your groups |
 | *Deploy to AWS* shows **skipped** | `AWS_DEPLOY_ROLE_ARN` is not set (C4), or CI failed |
 | Deploy fails with `Not authorized to perform sts:AssumeRoleWithWebIdentity` | `github_repository` in C3 must exactly match `owner/repo`, and the job must use the `production` environment |
-| Bedrock `AccessDeniedException` in the logs | Model access is not enabled in that region (C2), or the model ID needs an inference profile ID |
+| Bedrock `AccessDeniedException` or `ValidationException` in the logs | Model access, model ID or a setting the model rejects: rerun the tests in [Choosing the Amazon Bedrock models](BEDROCK_MODELS.md#5-test-the-models-the-way-the-application-calls-them) |
 | ECS tasks keep restarting | CloudWatch Logs → `/ecs/hrflow-dev/api`; usually a configuration error, which is printed on startup |
 | Documents stuck in *Extracting* / *OCR running* | Check the `ingest` / `textract-callback` Lambda logs and the DLQs (`terraform output dead_letter_queues`); use **Reprocess** after one hour |

@@ -48,26 +48,15 @@ echo "Deploying to account $ACCOUNT_ID in $AWS_REGION"
 
 Keep this terminal open: later steps use these variables.
 
-## Step 4 — Enable and test the Bedrock models
+## Step 4 — Choose, enable and test the Bedrock models
 
-1. In the AWS console, in your region, open **Amazon Bedrock → Model access** and enable **Titan Text Embeddings V2** and a chat model (for example an Anthropic Claude model).
-2. Find the chat model ID. Newer models are called through an *inference profile*:
-   ```bash
-   aws bedrock list-inference-profiles --query 'inferenceProfileSummaries[].inferenceProfileId' --output table
-   ```
-3. Save it, and check that both models answer **before** deploying:
-   ```bash
-   export MODEL_ID=<inference profile or model ID from the list>
+Follow **[Choosing the Amazon Bedrock models](BEDROCK_MODELS.md)**, steps 2–5: which chat model to pick (start with Claude Haiku 5.5), enabling model access, finding the exact ID for your region, and testing both models with the same settings the app uses. You finish with:
 
-   aws bedrock-runtime converse --model-id "$MODEL_ID" \
-     --messages '[{"role":"user","content":[{"text":"Reply with OK"}]}]' \
-     --query 'output.message.content[0].text' --output text           # prints OK
+```bash
+export MODEL_ID=<the inference profile ID or model ID that passed the test>
+```
 
-   aws bedrock-runtime invoke-model --model-id amazon.titan-embed-text-v2:0 \
-     --body '{"inputText":"hello"}' --cli-binary-format raw-in-base64-out /dev/stdout \
-     | head -c 80; echo                                                # prints {"embedding":[...
-   ```
-   An `AccessDeniedException` means model access is not enabled yet in this region.
+Optionally do its step 7 (lower effort for faster, cheaper answers) and add `bedrock_effort = "low"` to `terraform.tfvars` in Step 6.
 
 ## Step 5 — Create a bucket for the Terraform state
 
@@ -251,4 +240,4 @@ aws s3api delete-bucket --bucket "$STATE_BUCKET"
 | ECS tasks keep restarting | `aws logs tail /ecs/hrflow-dev/api`: configuration errors are printed at startup |
 | Sign-in shows `redirect_mismatch` | Open the app through `terraform output app_url` exactly (Cognito only allows that URL) |
 | Chat says there is no relevant evidence | The document is not **published**, or not shared with the user's group |
-| Bedrock `AccessDeniedException` in the logs | Model access is not enabled in this region, or `MODEL_ID` needs an inference profile ID (Step 4) |
+| Bedrock `AccessDeniedException` or `ValidationException` in the logs | Model access, model ID or a setting the model rejects: rerun the tests in [Choosing the Amazon Bedrock models](BEDROCK_MODELS.md#5-test-the-models-the-way-the-application-calls-them) |

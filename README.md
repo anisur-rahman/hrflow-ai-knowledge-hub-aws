@@ -36,6 +36,7 @@ An AI-enabled HR & Operations knowledge hub. HR uploads policy PDFs, AI proposes
 - [License](#license)
 - [Step-by-step guide](docs/GETTING_STARTED.md)
 - [Deploy to AWS from the command line](docs/DEPLOY_AWS_CLI.md)
+- [Choosing the Amazon Bedrock models](docs/BEDROCK_MODELS.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 - [Changelog](CHANGELOG.md)

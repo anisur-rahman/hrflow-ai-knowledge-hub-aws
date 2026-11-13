@@ -9,6 +9,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 - Container images for every release on GitHub Container Registry: `ghcr.io/anisur-rahman/hrflow-ai-knowledge-hub-aws/{api,web,worker}` (`api` and `web` for amd64 and arm64), published by the new *Publish images* workflow.
 - `docker-compose.ghcr.yml` to run the published images locally without building.
+- [Choosing the Amazon Bedrock models](docs/BEDROCK_MODELS.md): which chat model to use, how to find its ID in your region, and how to test it with the app's own settings.
+- Optional `BEDROCK_EFFORT` setting (`.env`, Terraform `bedrock_effort`, GitHub variable) to pass Claude's effort level through Bedrock.
+
+### Fixed
+- Bedrock calls no longer send `temperature`, which current Claude models reject, and their output ceilings now leave room for the model's thinking (1,024 / 2,048 / 4,096 tokens instead of 100 / 400 / 850), so answers are not cut off.
+- The model check in the deployment guides now tests the model with the same settings the app uses, and reads the answer text even when a reasoning block comes first.
 
 ## [1.0.0] - 2026-11-12
 
