@@ -42,6 +42,7 @@ locals {
     AI_PROVIDER             = "bedrock"
     BEDROCK_CHAT_MODEL_ID   = var.bedrock_chat_model_id
     BEDROCK_EMBED_MODEL_ID  = var.bedrock_embed_model_id
+    BEDROCK_EFFORT          = var.bedrock_effort
     STORAGE_PROVIDER        = "s3"
     DOCUMENT_BUCKET         = aws_s3_bucket.documents.bucket
     INGESTION_QUEUE_URL     = aws_sqs_queue.ingest.url

@@ -34,6 +34,9 @@ class Settings(BaseSettings):
     ai_provider: Literal['mock', 'bedrock'] = 'mock'
     bedrock_chat_model_id: str = ''
     bedrock_embed_model_id: str = 'amazon.titan-embed-text-v2:0'
+    # Optional chat-model tuning (see docs/DEPLOY_AWS_CLI.md, step 4):
+    bedrock_effort: Literal['', 'low', 'medium', 'high'] = ''  # Claude output_config.effort; '' = model default
+    bedrock_temperature: float | None = None  # only for models that still accept sampling parameters
     embed_concurrency: int = 4
     retrieval_top_k: int = 5
     retrieval_max_distance: float = 0.85

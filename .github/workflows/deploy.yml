@@ -1,7 +1,7 @@
 name: Deploy to AWS
 # Runs after CI passes on main, or manually. Requires (see README "Deploy to AWS"):
 #   repository variables AWS_DEPLOY_ROLE_ARN, AWS_REGION, TF_STATE_BUCKET, BEDROCK_CHAT_MODEL_ID
-#   optional variables ENVIRONMENT (default dev), ALARM_EMAIL
+#   optional variables ENVIRONMENT (default dev), ALARM_EMAIL, BEDROCK_EFFORT (see docs/BEDROCK_MODELS.md)
 #   a GitHub environment named "production" (add required reviewers for a manual approval gate)
 on:
   workflow_run:
@@ -31,6 +31,7 @@ jobs:
       TF_VAR_environment: ${{ vars.ENVIRONMENT || 'dev' }}
       TF_VAR_aws_region: ${{ vars.AWS_REGION }}
       TF_VAR_bedrock_chat_model_id: ${{ vars.BEDROCK_CHAT_MODEL_ID }}
+      TF_VAR_bedrock_effort: ${{ vars.BEDROCK_EFFORT }}
       TF_VAR_alarm_email: ${{ vars.ALARM_EMAIL }}
     defaults:
       run:

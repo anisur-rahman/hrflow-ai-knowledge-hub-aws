@@ -23,6 +23,16 @@ variable "bedrock_chat_model_id" {
   type        = string
 }
 
+variable "bedrock_effort" {
+  description = "Optional Claude effort (low | medium | high) for the chat model; empty uses the model default. Verify first (docs/DEPLOY_AWS_CLI.md, step 4)."
+  type        = string
+  default     = ""
+  validation {
+    condition     = contains(["", "low", "medium", "high"], var.bedrock_effort)
+    error_message = "bedrock_effort must be empty, low, medium or high."
+  }
+}
+
 variable "bedrock_embed_model_id" {
   type    = string
   default = "amazon.titan-embed-text-v2:0"

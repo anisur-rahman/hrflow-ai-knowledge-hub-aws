@@ -11,6 +11,7 @@ from app.services import audit, vector_store
 from app.services.bedrock import converse
 from app.services.embeddings import embed
 
+MAX_TOKENS = 4096  # ceiling incl. model thinking; typical answers are a few hundred tokens
 NO_EVIDENCE = 'I could not find relevant policy evidence that you are authorized to see. Please contact HR.'
 
 SYSTEM = (
@@ -50,7 +51,7 @@ def answer(question: str, sources: list[dict], history: list[dict]) -> str:
         for s in sources)
     messages = [{'role': turn['role'], 'content': [{'text': turn['content']}]} for turn in history]
     messages.append({'role': 'user', 'content': [{'text': f'Evidence:\n{evidence}\n\nQuestion: {question}'}]})
-    return converse(SYSTEM, messages, 850, purpose='answer')
+    return converse(SYSTEM, messages, MAX_TOKENS, purpose='answer')
 
 
 def _attr(value: str) -> str:

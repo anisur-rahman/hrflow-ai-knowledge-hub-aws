@@ -83,3 +83,54 @@ def test_parse_category(raw, expected):
 def test_parse_summary():
     assert parse_summary('{"summary": "Covers   home office\\nexpenses."}') == 'Covers home office expenses.'
     assert parse_summary('no json') == ''
+
+
+# ---------- Bedrock Converse request (what the app sends to AWS) ----------
+
+class FakeBedrock:
+    def __init__(self, stop_reason='end_turn'):
+        self.calls, self.stop_reason = [], stop_reason
+
+    def converse(self, **request):
+        self.calls.append(request)
+        return {'output': {'message': {'content': [{'reasoningContent': {'reasoningText': {'text': 'hidden'}}},
+                                                   {'text': 'Answer.'}]}},
+                'usage': {'inputTokens': 10, 'outputTokens': 5}, 'stopReason': self.stop_reason}
+
+
+@pytest.fixture
+def fake_bedrock(monkeypatch):
+    from app.services import bedrock
+    fake = FakeBedrock()
+    monkeypatch.setattr(bedrock, 'client', lambda: fake)
+    monkeypatch.setattr(bedrock.settings, 'bedrock_chat_model_id', 'test-model')
+    return fake
+
+
+def test_converse_sends_no_sampling_parameters_by_default(fake_bedrock):
+    from app.services.bedrock import converse
+    assert converse('sys', [{'role': 'user', 'content': [{'text': 'hi'}]}], 4096, purpose='answer') == 'Answer.'
+    request = fake_bedrock.calls[0]
+    assert request['inferenceConfig'] == {'maxTokens': 4096}  # no temperature: current Claude models reject it
+    assert 'additionalModelRequestFields' not in request
+    assert request['modelId'] == 'test-model' and request['system'] == [{'text': 'sys'}]
+
+
+def test_converse_optional_effort_and_temperature(fake_bedrock, monkeypatch):
+    from app.services.bedrock import converse, settings
+    monkeypatch.setattr(settings, 'bedrock_effort', 'low')
+    monkeypatch.setattr(settings, 'bedrock_temperature', 0.2)
+    converse('sys', [{'role': 'user', 'content': [{'text': 'hi'}]}], 1024, purpose='classification')
+    request = fake_bedrock.calls[0]
+    assert request['additionalModelRequestFields'] == {'output_config': {'effort': 'low'}}
+    assert request['inferenceConfig'] == {'maxTokens': 1024, 'temperature': 0.2}
+
+
+def test_ai_calls_leave_room_for_thinking(fake_bedrock, monkeypatch):
+    from app.services import classification, rag_service, summarization
+    for module in (classification, summarization, rag_service):
+        monkeypatch.setattr(module.settings, 'ai_provider', 'bedrock')
+    classification.classify('policy text')
+    summarization.summarize('policy text')
+    rag_service.answer('q?', [{'title': 'T', 'version': None, 'page': 1, 'heading': None, 'content': 'c'}], [])
+    assert [c['inferenceConfig']['maxTokens'] for c in fake_bedrock.calls] == [1024, 2048, 4096]
